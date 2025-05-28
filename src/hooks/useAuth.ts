@@ -15,7 +15,7 @@ export const useAuth = () => {
             setAuthToken(token)
             const me = await fetchMe().then(res => res.data)
             setUser(me)
-            navigate('/')
+            navigate('/chat')
         } catch (err: unknown) {
             const error = err as AxiosError<{ detail: string }>
             const message =
