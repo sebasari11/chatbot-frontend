@@ -14,6 +14,10 @@ export const registerSchema = z.object({
                     'La contraseña debe contener:\n- Una letra mayúscula\n- Una letra minúscula\n- Un número\n- Un carácter especial',
             }
         ),
+    confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
 })
 
 export type RegisterData = z.infer<typeof registerSchema>

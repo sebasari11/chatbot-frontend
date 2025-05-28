@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import Input from '../components/Input'
 import { registerSchema, type RegisterData } from '../schemas/registerSchema'
 import { useState } from 'react'
+import { PasswordInput } from '../components/PasswordInput'
 
 
 export default function RegisterPage() {
@@ -42,7 +43,17 @@ export default function RegisterPage() {
 
                 <Input {...register('email')} label="Correo" error={errors.email?.message} />
 
-                <Input type="password" {...register('password')} label="Contraseña" error={errors.password?.message} />
+                <PasswordInput
+                    label="Contraseña"
+                    register={register('password')}
+                    error={errors.password?.message}
+                />
+
+                <PasswordInput
+                    label="Repetir Contraseña"
+                    register={register('confirmPassword')}
+                    error={errors.confirmPassword?.message}
+                />
 
                 <button type="submit" className="bg-primary text-white w-full py-2 rounded">
                     Registrarse

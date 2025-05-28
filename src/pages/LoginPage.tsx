@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginSchema, type LoginData } from '../schemas/loginSchema'
-import Input from '../components/Input'
-import { useAuth } from '../hooks/useAuth'
+import { loginSchema, type LoginData } from '@/schemas/loginSchema'
+import Input from '@/components/Input'
+import { useAuth } from '@/hooks/useAuth'
 import { useState } from 'react'
 
 export default function LoginPage() {
