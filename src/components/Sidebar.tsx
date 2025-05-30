@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getChatSessionsByUserId, startChatSession } from '@/api/chat'
-
+import { useNavigate, useParams } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { getChatSessionsByCurrentUser, startChatSession } from '@/api/chat'
 import type { ChatSessionResponse } from "@/types/chat";
 import { useAuthContext } from "@/context/AuthContext";
 
@@ -9,15 +9,16 @@ export const Sidebar: React.FC = () => {
     const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
     const { user } = useAuthContext();
     const navigate = useNavigate();
+    const { session_external_id } = useParams<{ session_external_id: string }>();
 
-    const fetchSessions = async () => {
+    const fetchSessions = React.useCallback(async () => {
         try {
-            const sessions = await getChatSessionsByUserId(user?.external_id);
+            const sessions = await getChatSessionsByCurrentUser(user?.id);
             setSessions(sessions);
         } catch (error) {
             console.error("Error fetching sessions", error);
         }
-    };
+    }, [user?.id]);
 
     const startNewSession = async () => {
         try {
@@ -31,20 +32,19 @@ export const Sidebar: React.FC = () => {
 
 
     useEffect(() => {
-        console.log("Fetching sessions for user:", user?.external_id);
-
-        if (user?.external_id) fetchSessions();
-    }, [user?.external_id]);
+        if (user?.id) fetchSessions();
+    }, [user?.id, fetchSessions]);
 
     return (
         <div className="w-64 h-screen bg-white dark:bg-gray-900 border-r dark:border-gray-700 flex flex-col">
             <div className="p-4 border-b dark:border-gray-700">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Tus sesiones</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Tus chats</h2>
                 <button
                     onClick={startNewSession}
-                    className="mt-2 w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    className="mt-3 w-full flex items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-800/50 p-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >
-                    + Nueva sesión
+                    <Plus size={16} strokeWidth={1.5} />
+                    Nuevo chat
                 </button>
             </div>
             <div className="flex-1 overflow-y-auto p-2">
@@ -52,9 +52,10 @@ export const Sidebar: React.FC = () => {
                     <div
                         key={session.external_id}
                         onClick={() => navigate(`/chat/${session.external_id}`)}
-                        className="cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-gray-200"
+                        className={`cursor-pointer p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700" : ""
+                            }`}
                     >
-                        Sesión del {new Date(session.created_at).toLocaleDateString()}
+                        Chat del {new Date(session.created_at).toLocaleDateString()}
                     </div>
                 ))}
             </div>
