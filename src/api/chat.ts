@@ -27,13 +27,13 @@ export async function sendMessage({
     return response.data;
 }
 
-export async function getSessionMessages(chat_session_id: string) {
+export async function getSessionMessages(chat_session_id: string): Promise<ChatMessageResponse[]> {
     const response = await API.get(`/chat/sessions/${chat_session_id}/messages`);
     return response.data;
 }
 
-export async function getChatSessionsByUserId(userId: string | undefined) {
+export async function getChatSessionsByCurrentUser(userId: string | undefined) {
     if (!userId) throw new Error("User ID is required");
-    const response = await API.get(`/users/${userId}/chat_sessions`);
+    const response = await API.get(`/users/me/chat_sessions/`);
     return response.data;
 }
