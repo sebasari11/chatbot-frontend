@@ -1,5 +1,5 @@
 export interface User {
-    external_id: string
+    id: string
     username: string
     email: string
     full_name: string
