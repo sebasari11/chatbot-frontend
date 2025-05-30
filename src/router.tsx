@@ -24,6 +24,7 @@ export default function AppRoutes() {
                 }
             />
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/chat/:session_external_id" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
         </Routes>
     )
 }
