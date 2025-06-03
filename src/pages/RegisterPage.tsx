@@ -5,6 +5,7 @@ import Input from '../components/Input'
 import { registerSchema, type RegisterData } from '../schemas/registerSchema'
 import { useState } from 'react'
 import { PasswordInput } from '../components/PasswordInput'
+import { SubmitButton } from '@/components/SubmitButton'
 
 
 export default function RegisterPage() {
@@ -12,9 +13,16 @@ export default function RegisterPage() {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm<RegisterData>({ resolver: zodResolver(registerSchema) })
     const [serverError, setServerError] = useState<string | null>(null)
+
+    const email = watch("email");
+    const full_name = watch("full_name");
+    const password = watch("password");
+    const confirmPassword = watch("confirmPassword")
+    const isDisabled = !email || !password || !full_name || !confirmPassword;
 
     const onSubmit = async (data: RegisterData) => {
         try {
@@ -55,9 +63,7 @@ export default function RegisterPage() {
                     error={errors.confirmPassword?.message}
                 />
 
-                <button type="submit" className="bg-primary text-white w-full py-2 rounded">
-                    Registrarse
-                </button>
+                <SubmitButton label="Registrarse" disabled={isDisabled} />
             </form>
         </div>
     )
