@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { getChatSessionsByCurrentUser, startChatSession } from '@/api/chat'
+import { getChatSessionsByCurrentUser, startChatSession, generate_chat_session_name } from '@/api/chat'
 import type { ChatSessionResponse } from "@/types/chat";
 import { useAuthContext } from "@/context/AuthContext";
 
@@ -31,6 +31,25 @@ export const Sidebar: React.FC = () => {
         }
     };
 
+    const handleSessionClick = async (newExternalId: string) => {
+        try {
+            const actualSessionName: string | null = sessions.find(session => session.external_id === session_external_id)?.session_name || null;
+            console.log("Actual session name", actualSessionName);
+            if (session_external_id && session_external_id !== newExternalId && !actualSessionName) {
+
+                console.log('Updating session name for previous session:', session_external_id);
+
+                await generate_chat_session_name(session_external_id);
+            }
+
+            navigate(`/chat/${newExternalId}`);
+
+            await fetchSessions();
+        } catch (error) {
+            console.error("Error al actualizar el nombre de la sesión anterior", error);
+        }
+    };
+
 
     useEffect(() => {
         if (user?.id) fetchSessions();
@@ -52,11 +71,11 @@ export const Sidebar: React.FC = () => {
                 {sessions.map((session) => (
                     <div
                         key={session.external_id}
-                        onClick={() => navigate(`/chat/${session.external_id}`)}
-                        className={`cursor-pointer p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700" : ""
+                        onClick={() => handleSessionClick(session.external_id)}
+                        className={`cursor-pointer p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700 pointer-events-none" : ""
                             }`}
                     >
-                        Chat del {new Date(session.created_at).toLocaleDateString()}
+                        {session.session_name || `Chat del ${new Date(session.created_at).toLocaleDateString()}`}
                     </div>
                 ))}
             </div>
