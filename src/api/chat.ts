@@ -1,6 +1,6 @@
 // src/api/chat.ts
 import API from "./auth";
-import type { ChatMessageResponse } from "@/types/chat";
+import type { ChatMessageResponse, ChatSessionResponse } from "@/types/chat";
 
 export async function startChatSession() {
     const response = await API.post("/chat/sessions/start");
@@ -35,5 +35,10 @@ export async function getSessionMessages(chat_session_id: string): Promise<ChatM
 export async function getChatSessionsByCurrentUser(userId: string | undefined) {
     if (!userId) throw new Error("User ID is required");
     const response = await API.get(`/users/me/chat_sessions/`);
+    return response.data;
+}
+
+export async function generate_chat_session_name(externalId: string): Promise<ChatSessionResponse> {
+    const response = await API.put(`/chat/sessions/${externalId}/name`);
     return response.data;
 }

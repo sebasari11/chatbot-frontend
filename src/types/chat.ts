@@ -9,5 +9,6 @@ export type ChatMessageResponse = {
 export type ChatSessionResponse = {
     external_id: string;
     created_at: Date;
+    session_name: string | null;
     messages: [ChatMessageResponse];
 };
