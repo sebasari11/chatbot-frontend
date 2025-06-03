@@ -12,6 +12,7 @@ export const ChatPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [question, setQuestion] = useState("");
+    const [latestAnswerId, setLatestAnswerId] = useState<number | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 
@@ -21,6 +22,7 @@ export const ChatPage: React.FC = () => {
 
     useEffect(() => {
         setError(null);
+        setLatestAnswerId(null);
         setLoading(true);
         if (session_external_id) {
             async function fetchMessages() {
@@ -68,6 +70,7 @@ export const ChatPage: React.FC = () => {
                     .concat(response)
                     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
             );
+            setLatestAnswerId(response.id);
         } catch {
             setError("Error al enviar mensaje");
         } finally {
@@ -87,12 +90,21 @@ export const ChatPage: React.FC = () => {
                     {error && (
                         <p className="text-red-600 dark:text-red-400 mb-2 text-center">{error}</p>
                     )}
-                    {messages.map((msg) => (
-                        <React.Fragment key={msg.id}>
-                            {msg.question && <ChatMessageBubble message={msg} isUser={true} />}
-                            {msg.answer && <ChatMessageBubble message={msg} isUser={false} />}
-                        </React.Fragment>
-                    ))}
+                    {messages.map((msg) => {
+                        return (
+                            <React.Fragment key={msg.id}>
+                                {msg.question && <ChatMessageBubble message={msg} isUser={true} />}
+                                {msg.answer && (
+                                    <ChatMessageBubble
+                                        message={msg}
+                                        isUser={false}
+                                        isLatest={msg.id === latestAnswerId}
+                                        onTyping={scrollToBottom}
+                                    />
+                                )}
+                            </React.Fragment>
+                        );
+                    })}
                     <div ref={messagesEndRef} />
                     {loading && <Spinner />}
                 </div>
