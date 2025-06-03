@@ -35,7 +35,7 @@ export const Sidebar: React.FC = () => {
         try {
             const actualSessionName: string | null = sessions.find(session => session.external_id === session_external_id)?.session_name || null;
             console.log("Actual session name", actualSessionName);
-            if (session_external_id && session_external_id !== newExternalId && !actualSessionName) {
+            if (session_external_id && session_external_id !== newExternalId && (!actualSessionName || actualSessionName === "Nuevo Chat")) {
 
                 console.log('Updating session name for previous session:', session_external_id);
 
