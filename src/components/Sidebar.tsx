@@ -24,6 +24,7 @@ export const Sidebar: React.FC = () => {
         try {
             const response = await startChatSession();
             const newSession = response.data;
+            fetchSessions(); // Refresh the session list
             navigate(`/chat/${newSession.external_id}`);
         } catch (error) {
             console.error("Error starting new session", error);

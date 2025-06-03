@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { ChatMessageResponse } from "@/types/chat";
 import { ChatMessageBubble } from "@/components/ChatMessageBubble";
-import { getSessionMessages } from "@/api/chat";
+import { getSessionMessages, sendMessage } from "@/api/chat";
 import { Spinner } from "@/components/Spinner";
 import { Sidebar } from "@/components/Sidebar";
 
@@ -30,13 +30,13 @@ export const ChatPage: React.FC = () => {
                     console.log("Error state:", error);
                 } catch (error) {
                     console.error("Error fetching messages:", error);
-                    setError("Error fetching messages");
+                    setError("Error cargando messages");
                 }
             };
             fetchMessages();
         } else {
             console.error("No session ID provided");
-            setError("No session ID provided");
+            setError("No se proporcionó ID de sesión");
         }
         setLoading(false);
     }, [error, session_external_id]);
@@ -45,20 +45,33 @@ export const ChatPage: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!question.trim()) return;
         setLoading(true);
-        setQuestion("");
         try {
             const userMessage: ChatMessageResponse = {
                 id: Math.random(), // temporal, solo para key
                 timestamp: new Date(),
                 question,
                 answer: undefined,
-                chat_session_id: session.external_id,
+                chat_session_id: session_external_id as string,
             };
             setMessages((prev) => [...prev, userMessage]);
             setQuestion("");
+            const response = await sendMessage({
+                chat_session_id: session_external_id as string,
+                question,
+            });
+            setMessages((prev) =>
+                prev
+                    .filter((m) => m.id !== userMessage.id)
+                    .concat(response)
+                    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+            );
+        } catch {
+            setError("Error al enviar mensaje");
+        } finally {
+            setLoading(false);
         }
 
     }
