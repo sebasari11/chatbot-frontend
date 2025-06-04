@@ -4,9 +4,6 @@ import type { ChatMessageResponse, ChatSessionResponse } from "@/types/chat";
 
 export async function startChatSession() {
     const response = await API.post("/chat/sessions/start");
-
-
-
     return response.data;
 }
 
