@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage'
 import { useAuthContext } from './context/AuthContext'
 import type { JSX } from 'react'
 import { ChatPage } from './pages/ChatPage'
+import ResourcesPage from './pages/ResourcesPage'
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const { user } = useAuthContext()
@@ -24,6 +25,7 @@ export default function AppRoutes() {
                 }
             />
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
             <Route path="/chat/:session_external_id" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
         </Routes>
     )
