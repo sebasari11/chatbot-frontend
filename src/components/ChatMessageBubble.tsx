@@ -17,7 +17,7 @@ export const ChatMessageBubble: React.FC<Props> = ({ message, isUser, isLatest, 
           ${isUser ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100"}`}
             >
                 {isUser ? message.question : isLatest ? (
-                    <TypingText text={message.answer || ""} speed={5} onTyping={onTyping} />
+                    <TypingText text={message.answer || ""} speed={30} onTyping={onTyping} />
                 ) : (
                     message.answer
                 )}

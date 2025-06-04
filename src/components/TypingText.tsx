@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from 'react';
+import { useTypewriter, Cursor } from 'react-simple-typewriter';
 
 interface TypingTextProps {
     text: string;
@@ -7,19 +8,20 @@ interface TypingTextProps {
 }
 
 export const TypingText: React.FC<TypingTextProps> = ({ text, speed = 30, onTyping }) => {
-    const [displayedText, setDisplayedText] = useState("");
+    const [typedText, { isDone }] = useTypewriter({
+        words: [text],
+        loop: 1,
+        typeSpeed: speed,
+        deleteSpeed: 0,
+        delaySpeed: 1000,
+        onType: onTyping,
+    });
 
-    useEffect(() => {
-        let index = 0;
-        const interval = setInterval(() => {
-            setDisplayedText((prev) => prev + text[index]);
-            if (onTyping) onTyping();
-            index++;
-            if (index >= text.length - 1) clearInterval(interval);
-        }, speed);
+    return (
+        <span>
+            {typedText}
+            {!isDone && <Cursor cursorStyle="|" />}
 
-        return () => clearInterval(interval);
-    }, [text, speed, onTyping]);
-
-    return <span>{displayedText}</span>;
+        </span>
+    );
 };
