@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { getChatSessionsByCurrentUser, startChatSession, generate_chat_session_name } from '@/api/chat'
 import type { ChatSessionResponse } from "@/types/chat";
@@ -78,6 +78,9 @@ export const Sidebar: React.FC = () => {
                         {session.session_name || `Chat del ${new Date(session.created_at).toLocaleDateString()}`}
                     </div>
                 ))}
+                <Link to="/resources" className="text-blue-500 hover:underline dark:text-blue-400">
+                    Recursos
+                </Link>
             </div>
         </div>
     );
