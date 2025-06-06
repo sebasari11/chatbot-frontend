@@ -1,15 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Plus } from "lucide-react";
-import { getChatSessionsByCurrentUser, startChatSession, generate_chat_session_name } from '@/api/chat'
+import { Plus, Trash2 } from "lucide-react";
+import {
+    getChatSessionsByCurrentUser,
+    startChatSession,
+    generate_chat_session_name,
+    deleteChatSession
+} from '@/api/chat'
 import type { ChatSessionResponse } from "@/types/chat";
 import { useAuthContext } from "@/context/AuthContext";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export const Sidebar: React.FC = () => {
-    const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
     const { user } = useAuthContext();
-    const navigate = useNavigate();
+    const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
     const { session_external_id } = useParams<{ session_external_id: string }>();
+    const [selectedSession, setSelectedSession] = useState<ChatSessionResponse | null>(null);
+    const navigate = useNavigate();
 
     const fetchSessions = React.useCallback(async () => {
         try {
@@ -50,6 +65,21 @@ export const Sidebar: React.FC = () => {
         }
     };
 
+    const handleDelete = async () => {
+        if (selectedSession) {
+            try {
+                await deleteChatSession(selectedSession.external_id);
+                setSelectedSession(null);
+                await fetchSessions();
+                if (session_external_id === selectedSession.external_id) {
+                    navigate("/"); // Navega a raíz si se elimina la sesión actual
+                }
+            } catch (error) {
+                console.error("Error deleting session", error);
+            }
+        }
+    };
+
 
     useEffect(() => {
         if (user?.id) fetchSessions();
@@ -67,18 +97,51 @@ export const Sidebar: React.FC = () => {
                     Nuevo chat
                 </button>
             </div>
+
             <div className="flex-1 overflow-y-auto p-2">
                 {sessions.map((session) => (
                     <div
                         key={session.external_id}
-                        onClick={() => handleSessionClick(session.external_id)}
-                        className={`cursor-pointer p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700 pointer-events-none" : ""
+                        className={`group flex items-center justify-between gap-2 p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700 pointer-events-none" : ""
                             }`}
                     >
-                        {session.session_name || `Chat del ${new Date(session.created_at).toLocaleDateString()}`}
+                        <span
+                            onClick={() => handleSessionClick(session.external_id)}
+                            className="flex-1 cursor-pointer truncate"
+                        >
+                            {session.session_name || `Chat del ${new Date(session.created_at).toLocaleDateString()}`}
+                        </span>
+
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <button
+                                    onClick={() => setSelectedSession(session)}
+                                    className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-500 transition"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            </DialogTrigger>
+
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>¿Eliminar sesión?</DialogTitle>
+                                </DialogHeader>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar esta sesión?
+                                </p>
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setSelectedSession(null)}>
+                                        Cancelar
+                                    </Button>
+                                    <Button variant="destructive" onClick={handleDelete}>
+                                        Eliminar
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 ))}
-                <Link to="/resources" className="text-blue-500 hover:underline dark:text-blue-400">
+                <Link to="/resources" className="text-blue-500 hover:underline dark:text-blue-400 mt-4 block">
                     Recursos
                 </Link>
             </div>
