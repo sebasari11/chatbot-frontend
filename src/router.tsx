@@ -3,7 +3,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import { useAuthContext } from './context/AuthContext'
 import type { JSX } from 'react'
-import { ChatPage } from './pages/ChatPage'
+// import { ChatPage } from './pages/ChatPage'
+import { ChatPage } from './pages/ChatPage2'
 import ResourcesPage from './pages/ResourcesPage'
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {

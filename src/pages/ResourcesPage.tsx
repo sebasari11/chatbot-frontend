@@ -7,7 +7,7 @@ import {
     deleteResource,
 } from "@/api/resource";
 import type { Resource } from "@/types/resource";
-import ResourceTable from "@/components/ResourceTable";
+import ResourceTable from "@/components/resources/ResourceTable";
 import { ResourceForm } from "@/components/resources/ResourceForm";
 import {
     Dialog,

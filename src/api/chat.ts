@@ -39,3 +39,4 @@ export async function generate_chat_session_name(externalId: string): Promise<Ch
     const response = await API.put(`/chat/sessions/${externalId}/name`);
     return response.data;
 }
+export const deleteChatSession = (chat_session_id: string) => API.delete(`/chat/sessions/${chat_session_id}`);
