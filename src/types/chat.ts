@@ -1,4 +1,4 @@
-export type ChatMessageResponse = {
+export interface ChatMessageResponse {
     id: number;
     timestamp: Date;
     question: string;
@@ -6,7 +6,7 @@ export type ChatMessageResponse = {
     answer?: string;
 };
 
-export type ChatSessionResponse = {
+export interface ChatSessionResponse {
     external_id: string;
     created_at: Date;
     session_name: string | null;

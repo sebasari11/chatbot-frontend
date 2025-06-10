@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     getResources,
+    getResourceById,
     createResource,
     updateResource,
     //   processResource,
@@ -29,16 +30,23 @@ export default function ResourcesPage() {
         setResources(res.data);
     };
 
+    const fetchResource = async (id: string) => {
+        const res = await getResourceById(id);
+        return res.data;
+    }
+
+
     useEffect(() => {
         setEditing(null);
         setShowModal(false);
         fetchResources();
     }, []);
 
-    const handleEdit = (resource: Resource) => {
+    const handleEdit = async (resource: Resource) => {
         setEditing(null);
         setShowModal(false);
-        setEditing(resource);
+        const editResource = await fetchResource(resource.external_id);
+        setEditing(editResource);
         setShowModal(true);
     };
 

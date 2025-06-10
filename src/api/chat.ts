@@ -10,7 +10,7 @@ export async function startChatSession() {
 export async function sendMessage({
     chat_session_id,
     question,
-    model = "gemma3:latest",
+    model = "gemini",
 }: {
     chat_session_id: string;
     question: string;

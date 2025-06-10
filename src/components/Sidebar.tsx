@@ -47,6 +47,7 @@ export const Sidebar: React.FC = () => {
     };
 
     const handleSessionClick = async (newExternalId: string) => {
+        navigate(`/chat/${newExternalId}`);
         try {
             const actualSessionName: string | null = sessions.find(session => session.external_id === session_external_id)?.session_name || null;
             console.log("Actual session name", actualSessionName);
@@ -56,9 +57,6 @@ export const Sidebar: React.FC = () => {
 
                 await generate_chat_session_name(session_external_id);
             }
-
-            navigate(`/chat/${newExternalId}`);
-
             await fetchSessions();
         } catch (error) {
             console.error("Error al actualizar el nombre de la sesión anterior", error);

@@ -2,6 +2,7 @@
 import React from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { Resource, ResourceType } from "@/types/resource";
+import { Plus, Save, Trash2 } from "lucide-react";
 
 interface Props {
     initialData?: Resource;
@@ -84,12 +85,32 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                 </div>
             )}
 
-            <button
-                type="submit"
-                className="w-full bg-[#a0d7e7] hover:bg-[#88cde3] text-white font-semibold py-2 px-4 rounded-md"
-            >
-                {isEditing ? "Actualizar" : "Crear"}
-            </button>
+            <div className="flex items-center justify-between gap-4">
+                {/* Botón para remover chunks */}
+                {isEditing && <button
+                    type="button"
+                    className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                    title="Remover Chunks"
+                >
+                    <Trash2 className="w-5 h-5" /> Chunks
+                    <span className="sr-only">Remover Chunks</span>
+                </button>}
+
+                {/* Botón para crear o actualizar */}
+                <button
+                    type="submit"
+                    className="flex-1 flex items-center justify-center bg-[#a0d7e7] hover:bg-[#88cde3] text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                    title={isEditing ? "Actualizar" : "Crear"}
+                >
+                    {isEditing ? (
+                        <Save className="w-5 h-5" />
+                    ) : (
+                        <Plus className="w-5 h-5" />
+                    )}
+                    <span className="sr-only">{isEditing ? "Actualizar" : "Crear"}</span>
+                </button>
+            </div>
+
         </form>
     );
 };
