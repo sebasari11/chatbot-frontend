@@ -1,6 +1,6 @@
 import React from "react";
 import type { ChatMessageResponse } from "@/types/chat";
-import { ChatMessageBubble } from "../ChatMessageBubble";
+import { ChatMessageBubble } from "./ChatMessageBubble";
 type ChatMessageListProps = {
     messages: ChatMessageResponse[];
     latestAnswerId: number | null;

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getSessionMessages, sendMessage } from "@/api/chat";
-import { ChatMessageBubble } from "@/components/ChatMessageBubble";
+import { ChatMessageBubble } from "@/components/chat/ChatMessageBubble";
 import { Spinner } from "@/components/Spinner";
 import { ChatInput } from "@/components/chat/ChatInput"; // lo haremos en el siguiente paso
 import type { ChatMessageResponse } from "@/types/chat";

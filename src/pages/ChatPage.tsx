@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { ChatMessageResponse } from "@/types/chat";
-import { ChatMessageBubble } from "@/components/ChatMessageBubble";
+import { ChatMessageBubble } from "@/components/chat/ChatMessageBubble";
 import { getSessionMessages, sendMessage } from "@/api/chat";
 import { Spinner } from "@/components/Spinner";
 import { Sidebar } from "@/components/Sidebar";
