@@ -5,7 +5,11 @@ import logo from "@/assets/ucalma-logo.webp";
 import { ChatInput } from "./ChatInput";
 import { startChatSession, sendMessage } from "@/api/chat";
 
-const ChatWelcome: React.FC = () => {
+type ChatWelcomeProps = {
+    onSessionCreated: () => void;
+};
+
+const ChatWelcome: React.FC<ChatWelcomeProps> = ({ onSessionCreated }) => {
     const navigate = useNavigate();
     const [question, setQuestion] = useState("");
     const [loading, setLoading] = useState(false);
@@ -14,6 +18,7 @@ const ChatWelcome: React.FC = () => {
         setLoading(true);
         try {
             const response = await startChatSession();
+            await onSessionCreated();
             const session_external_id = response.external_id;
             await sendMessage({
                 chat_session_id: session_external_id,

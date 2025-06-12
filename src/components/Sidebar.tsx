@@ -19,21 +19,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-export const Sidebar: React.FC = () => {
+type SidebarProps = {
+    sessions: ChatSessionResponse[];
+    fetchSessions: () => Promise<void>;
+};
+
+export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => {
     const { user } = useAuthContext();
-    const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
     const { session_external_id } = useParams<{ session_external_id: string }>();
     const [selectedSession, setSelectedSession] = useState<ChatSessionResponse | null>(null);
     const navigate = useNavigate();
-
-    const fetchSessions = React.useCallback(async () => {
-        try {
-            const sessions = await getChatSessionsByCurrentUser(user?.id);
-            setSessions(sessions);
-        } catch (error) {
-            console.error("Error fetching sessions", error);
-        }
-    }, [user?.id]);
 
     const startNewSession = async () => {
         try {
