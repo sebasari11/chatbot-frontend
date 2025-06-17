@@ -8,7 +8,10 @@ import { ChatPage } from './pages/ChatPage2'
 import ResourcesPage from './pages/ResourcesPage'
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    const { user } = useAuthContext()
+    const { user, loading } = useAuthContext()
+    if (loading) {
+        return <div className="h-screen flex items-center justify-center text-xl">Cargando...</div>
+    }
     return user ? children : <Navigate to="/login" />
 }
 
