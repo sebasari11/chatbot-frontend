@@ -6,7 +6,7 @@ import ChatWelcome from "@/components/chat/ChatWelcome";
 import { getChatSessionsByCurrentUser } from "@/api/chat";
 import { useAuthContext } from "@/context/AuthContext";
 import type { ChatSessionResponse } from "@/types/chat";
-import UserMenu from "@/components/UserMenu";
+import UserMenu from "@/components/home/UserMenu";
 
 export const ChatPage: React.FC = () => {
     const { user, loading } = useAuthContext();
@@ -30,11 +30,11 @@ export const ChatPage: React.FC = () => {
     }, [loading, user?.external_id, fetchSessions]);
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-white dark:bg-gray-900">
             <Sidebar sessions={sessions} fetchSessions={fetchSessions} />
 
             <div className="flex-1 flex flex-col">
-                <div className="flex justify-end items-center p-4 border-b bg-white dark:bg-gray-900">
+                <div className="flex justify-end items-center p-4 bg-white dark:bg-gray-900">
                     <UserMenu />
                 </div>
 

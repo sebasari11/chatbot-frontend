@@ -86,10 +86,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ sessionId }) => {
     };
 
     return (
-        <div className="flex flex-col max-w-3xl mx-auto h-screen p-4 bg-white dark:bg-gray-900 w-full">
-            <h1 className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-400">Chat de Salud Mental</h1>
-
-            <div className="flex-1 overflow-y-auto border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+        <div className="flex flex-col max-w-3xl mx-auto h-full p-4 w-full bg-white dark:bg-gray-900">
+            <div className="flex-1 overflow-y-auto space-y-2">
                 {error && (
                     <p className="text-red-600 dark:text-red-400 mb-2 text-center">{error}</p>
                 )}
