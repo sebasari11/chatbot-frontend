@@ -1,9 +1,10 @@
 export interface User {
-    id: string
+    external_id: string
     username: string
     email: string
     full_name: string
     created_at: string
+    role: 'user' | 'admin'
 }
 
 export interface Token {
