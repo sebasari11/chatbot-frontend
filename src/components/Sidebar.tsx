@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Trash2 } from "lucide-react";
 import {
-    getChatSessionsByCurrentUser,
     startChatSession,
     generate_chat_session_name,
     deleteChatSession
@@ -18,6 +17,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import HomeButton from "./home/HomeButton";
 
 type SidebarProps = {
     sessions: ChatSessionResponse[];
@@ -34,7 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => 
         try {
             const response = await startChatSession();
             const newSession = response.data;
-            fetchSessions(); // Refresh the session list
+            fetchSessions();
             navigate(`/chat/${newSession.external_id}`);
         } catch (error) {
             console.error("Error starting new session", error);
@@ -73,29 +73,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => 
         }
     };
 
-
     useEffect(() => {
         if (user?.external_id) fetchSessions();
     }, [user?.external_id, fetchSessions]);
 
     return (
-        <div className="w-64 h-screen bg-white dark:bg-gray-900 border-r dark:border-gray-700 flex flex-col">
-            <div className="p-4 border-b dark:border-gray-700">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Tus chats</h2>
+        <div className="w-64 h-screen bg-white dark:bg-[#1e1e20] border-r dark:border-gray-700 flex flex-col">
+            <div className="p-4 border-b dark:border-gray-700 flex flex-col gap-4">
+                <div className="flex justify-center">
+                    <HomeButton size={10} />
+                </div>
                 <button
                     onClick={startNewSession}
-                    className="mt-3 w-full flex items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-800/50 p-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    className="flex items-center gap-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-[#2a2a2e] px-3 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >
-                    <Plus size={16} strokeWidth={1.5} />
+                    <Plus size={16} />
                     Nuevo chat
                 </button>
+
+                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide px-1">
+                    Chats
+                </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2">
+            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-1">
                 {sessions.map((session) => (
                     <div
                         key={session.external_id}
-                        className={`group flex items-center justify-between gap-2 p-2 rounded text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${session.external_id === session_external_id ? "bg-blue-100 dark:bg-blue-700 pointer-events-none" : ""
+                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm text-gray-900 dark:text-gray-100 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition ${session.external_id === session_external_id
+                            ? "bg-blue-100 dark:bg-blue-700 pointer-events-none"
+                            : ""
                             }`}
                     >
                         <span
