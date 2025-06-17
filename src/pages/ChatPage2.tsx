@@ -6,6 +6,7 @@ import ChatWelcome from "@/components/chat/ChatWelcome";
 import { getChatSessionsByCurrentUser } from "@/api/chat";
 import { useAuthContext } from "@/context/AuthContext";
 import type { ChatSessionResponse } from "@/types/chat";
+import UserMenu from "@/components/UserMenu";
 
 export const ChatPage: React.FC = () => {
     const { session_external_id } = useParams();
@@ -29,14 +30,21 @@ export const ChatPage: React.FC = () => {
     return (
         <div className="flex h-screen">
             <Sidebar sessions={sessions} fetchSessions={fetchSessions} />
-            <div className="flex-1">
-                {!session_external_id ? (
-                    <>
+
+            <div className="flex-1 flex flex-col">
+                {/* Barra superior */}
+                <div className="flex justify-end items-center p-4 border-b bg-white dark:bg-gray-900">
+                    <UserMenu />
+                </div>
+
+                {/* Contenido del chat */}
+                <div className="flex-1 overflow-y-auto">
+                    {!session_external_id ? (
                         <ChatWelcome onSessionCreated={fetchSessions} />
-                    </>
-                ) : (
-                    <ChatWindow sessionId={session_external_id} />
-                )}
+                    ) : (
+                        <ChatWindow sessionId={session_external_id} />
+                    )}
+                </div>
             </div>
         </div>
     );
