@@ -75,8 +75,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => 
 
 
     useEffect(() => {
-        if (user?.id) fetchSessions();
-    }, [user?.id, fetchSessions]);
+        if (user?.external_id) fetchSessions();
+    }, [user?.external_id, fetchSessions]);
 
     return (
         <div className="w-64 h-screen bg-white dark:bg-gray-900 border-r dark:border-gray-700 flex flex-col">
@@ -134,9 +134,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => 
                         </Dialog>
                     </div>
                 ))}
-                <Link to="/resources" className="text-blue-500 hover:underline dark:text-blue-400 mt-4 block">
-                    Recursos
-                </Link>
             </div>
         </div>
     );

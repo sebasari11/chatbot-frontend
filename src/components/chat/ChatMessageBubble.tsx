@@ -1,6 +1,6 @@
 import React from "react";
 import { type ChatMessageResponse } from "@/types/chat";
-import { TypingText } from "@/components/TypingText";
+import { TypingText } from "@/components/chat/TypingText";
 
 interface Props {
     message: ChatMessageResponse;
