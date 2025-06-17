@@ -5,6 +5,8 @@ const HomeRedirect = () => {
     const { user, loading } = useAuthContext();
 
     if (loading) {
+        console.log("Loading user authentication status...", loading);
+
         return <div className="h-screen flex items-center justify-center text-xl">Cargando...</div>;
     }
 
