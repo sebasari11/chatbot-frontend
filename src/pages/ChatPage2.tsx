@@ -9,35 +9,35 @@ import type { ChatSessionResponse } from "@/types/chat";
 import UserMenu from "@/components/UserMenu";
 
 export const ChatPage: React.FC = () => {
+    const { user, loading } = useAuthContext();
     const { session_external_id } = useParams();
-    const { user } = useAuthContext();
     const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
 
     const fetchSessions = useCallback(async () => {
-        if (!user?.id) return;
+        if (!user?.external_id) return;
         try {
-            const sessions = await getChatSessionsByCurrentUser(user.id);
+            const sessions = await getChatSessionsByCurrentUser(user.external_id);
             setSessions(sessions);
         } catch (error) {
             console.error("Error fetching sessions", error);
         }
-    }, [user?.id]);
+    }, [user?.external_id]);
 
     useEffect(() => {
-        fetchSessions();
-    }, [fetchSessions]);
+        if (!loading && user?.external_id) {
+            fetchSessions();
+        }
+    }, [loading, user?.external_id, fetchSessions]);
 
     return (
         <div className="flex h-screen">
             <Sidebar sessions={sessions} fetchSessions={fetchSessions} />
 
             <div className="flex-1 flex flex-col">
-                {/* Barra superior */}
                 <div className="flex justify-end items-center p-4 border-b bg-white dark:bg-gray-900">
                     <UserMenu />
                 </div>
 
-                {/* Contenido del chat */}
                 <div className="flex-1 overflow-y-auto">
                     {!session_external_id ? (
                         <ChatWelcome onSessionCreated={fetchSessions} />
