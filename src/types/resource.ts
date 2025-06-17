@@ -7,6 +7,7 @@ export interface ChunkResponse {
 
 export interface ResourceBase {
     external_id: string;
+    name: string;
     type: string;
     filepath?: string;
     processed: boolean;

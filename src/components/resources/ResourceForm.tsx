@@ -27,7 +27,7 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
         defaultValues: {
             name: initialData?.name || "",
             filepath: initialData?.filepath || "",
-            type: initialData?.type || "pdf",
+            type: (initialData?.type as ResourceType) || ("pdf" as ResourceType),
         },
     });
 
@@ -86,7 +86,6 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
             )}
 
             <div className="flex items-center justify-between gap-4">
-                {/* Botón para remover chunks */}
                 {isEditing && <button
                     type="button"
                     className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
@@ -96,7 +95,6 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                     <span className="sr-only">Remover Chunks</span>
                 </button>}
 
-                {/* Botón para crear o actualizar */}
                 <button
                     type="submit"
                     className="flex-1 flex items-center justify-center bg-[#a0d7e7] hover:bg-[#88cde3] text-white font-semibold py-2 px-4 rounded-md transition-colors"
