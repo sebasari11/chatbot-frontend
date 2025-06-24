@@ -1,4 +1,3 @@
-// src/components/resources/ResourceForm.tsx
 import React from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { Resource, ResourceType } from "@/types/resource";
@@ -16,13 +15,14 @@ interface FormValues {
     type: ResourceType;
 }
 
-const resourceTypes: ResourceType[] = ["pdf", "database", "web"];
+const resourceTypes: ResourceType[] = ["pdf", "database", "url"];
 
 export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing = false }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        watch
     } = useForm<FormValues>({
         defaultValues: {
             name: initialData?.name || "",
@@ -31,9 +31,11 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
         },
     });
 
+    const resourceType = watch("type");
+
     const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
         const formattedData: Partial<Resource> = {
-            name: data.name,
+            ...(data.type !== "url" && { name: data.name }),
             filepath: data.filepath,
             ...(isEditing ? {} : { type: data.type, processed: false }),
         };
@@ -49,18 +51,22 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                 {isEditing ? "Editar recurso" : "Crear nuevo recurso"}
             </h2>
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
-                <input
-                    type="text"
-                    {...register("name", { required: "El nombre es requerido" })}
-                    className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
-            </div>
+            {resourceType !== "url" && (
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+                    <input
+                        type="text"
+                        {...register("name", { required: "El nombre es requerido" })}
+                        className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                    />
+                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                </div>
+            )}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Ruta del archivo</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {resourceType === "url" ? "URL" : "Ruta del archivo"}
+                </label>
                 <input
                     type="text"
                     {...register("filepath", { required: "La ruta es requerida" })}
@@ -103,7 +109,7 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                     {isEditing ? (
                         <Save className="w-5 h-5" />
                     ) : (
-                        <Plus className="w-5 h-5" />
+                        <Save className="w-5 h-5" />
                     )}
                     <span className="sr-only">{isEditing ? "Actualizar" : "Crear"}</span>
                 </button>

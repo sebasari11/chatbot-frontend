@@ -4,7 +4,7 @@ import { Pencil, Play, Trash2 } from "lucide-react";
 interface Props {
     resources: Resource[];
     onEdit: (resource: Resource) => void;
-    onDelete: (id: string) => void;
+    onDelete: (resource: Resource) => void;
     onProcess: (resource: Resource) => void;
 }
 
@@ -24,7 +24,7 @@ export default function ResourceTable({ resources, onEdit, onDelete, onProcess }
                     {resources.map((res) => (
                         <tr key={res.external_id} className="hover:bg-gray-50 transition">
                             <td className="px-6 py-4 text-sm text-gray-800">{res.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-800 capitalize">{res.type}</td>
+                            <td className="px-6 py-4 text-sm text-gray-800 capitalize">{res.type.toUpperCase()}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">
                                 {res.created_at ? new Date(res.created_at).toLocaleString() : "—"}
                             </td>
@@ -32,8 +32,8 @@ export default function ResourceTable({ resources, onEdit, onDelete, onProcess }
                                 <button
                                     onClick={() => onProcess(res)}
                                     className={`p-2 rounded-md shadow-sm transition ${res.processed
-                                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                            : "bg-green-500 hover:bg-green-600 text-white"
+                                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                        : "bg-green-500 hover:bg-green-600 text-white"
                                         }`}
                                     title={res.processed ? "Ya procesado" : "Procesar"}
                                     disabled={res.processed}
@@ -49,7 +49,7 @@ export default function ResourceTable({ resources, onEdit, onDelete, onProcess }
                                     <Pencil size={18} />
                                 </button>
                                 <button
-                                    onClick={() => onDelete(res.external_id)}
+                                    onClick={() => onDelete(res)}
                                     className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow-sm transition"
                                     title="Eliminar"
                                 >

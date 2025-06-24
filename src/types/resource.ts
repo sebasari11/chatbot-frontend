@@ -1,4 +1,4 @@
-export type ResourceType = 'pdf' | 'database' | 'web';
+export type ResourceType = 'pdf' | 'database' | 'url';
 
 export interface ChunkResponse {
     resource_id: string;

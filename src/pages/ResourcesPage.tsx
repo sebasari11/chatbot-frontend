@@ -5,6 +5,7 @@ import {
     createResource,
     updateResource,
     deleteResource,
+    processResource,
 } from "@/api/resource";
 import type { Resource } from "@/types/resource";
 import ResourceTable from "@/components/resources/ResourceTable";
@@ -18,12 +19,26 @@ import {
     DialogDescription,
     DialogClose
 } from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import TopBar from "@/components/home/TopBar";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 
 export default function ResourcesPage() {
     const [resources, setResources] = useState<Resource[]>([]);
     const [editing, setEditing] = useState<Resource | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null);
+    const [resourceToProcess, setResourceToProcess] = useState<Resource | null>(null);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
     const fetchResources = async () => {
         const res = await getResources();
@@ -55,10 +70,35 @@ export default function ResourcesPage() {
         setShowModal(true);
     };
 
-    const handleDelete = async (id: string) => {
-        if (confirm("¿Eliminar este recurso?")) {
-            await deleteResource(id);
+    const handleDelete = (resource: Resource) => {
+        setResourceToDelete(resource);
+    };
+
+    const handleProcess = (resource: Resource) => {
+        setResourceToProcess(resource);
+    };
+
+    const confirmDelete = async () => {
+        if (resourceToDelete) {
+            await deleteResource(resourceToDelete.external_id);
+            setResourceToDelete(null);
             fetchResources();
+        }
+    };
+
+    const confirmProcess = async () => {
+        if (resourceToProcess) {
+            setIsProcessing(true);
+            try {
+                await processResource(resourceToProcess.external_id);
+                setResourceToProcess(null);
+                fetchResources();
+            } catch (error) {
+                console.error("Error al procesar el recurso:", error);
+            } finally {
+                setIsProcessing(false);
+                setResourceToProcess(null);
+            }
         }
     };
 
@@ -92,9 +132,7 @@ export default function ResourcesPage() {
                         resources={resources}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
-                        onProcess={(resource: Resource) => {
-                            throw new Error(`Function not implemented. ${resource.name}`);
-                        }}
+                        onProcess={handleProcess}
                     />
                 </div>
 
@@ -119,8 +157,39 @@ export default function ResourcesPage() {
                     </DialogClose>
                 </DialogContent>
             </div>
+            <AlertDialog open={!!resourceToDelete} onOpenChange={(open) => !open && setResourceToDelete(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Eliminar recurso?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta acción no se puede deshacer. El recurso será eliminado permanentemente.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete}>Eliminar</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
+            <AlertDialog open={!!resourceToProcess} onOpenChange={(open) => !open && setResourceToProcess(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Procesar recurso?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            El recurso será procesado según su tipo. Esta acción puede tardar unos segundos.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmProcess}>Procesar</AlertDialogAction>
+                    </AlertDialogFooter>
+
+                </AlertDialogContent>
+            </AlertDialog>
+            {isProcessing && <LoadingOverlay />}
         </Dialog>
+
 
     );
 }
