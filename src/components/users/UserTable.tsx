@@ -1,4 +1,4 @@
-import type { User } from "@/types/user";
+import { roleLabels, type User } from "@/types/user";
 import { Pencil } from "lucide-react";
 
 interface Props {
@@ -26,7 +26,9 @@ export default function UserTable({ users, onEdit }: Props) {
                             <td className="px-6 py-4 text-sm text-gray-800">{u.username}</td>
                             <td className="px-6 py-4 text-sm text-gray-800 capitalize">{u.full_name}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{u.email}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{u.role}</td>
+                            <td className="px-6 py-4 text-sm text-gray-600">
+                                {roleLabels[u.role] ?? u.role}
+                            </td>
                             <td className="px-6 py-4 text-right space-x-2">
                                 <button
                                     onClick={() => onEdit(u)}

@@ -1,4 +1,4 @@
-import type { User } from "@/types/user";
+import { roleOptions, type User } from "@/types/user";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -70,6 +70,20 @@ const UserForm: React.FC<Props> = ({ initialData, onSubmit, isEditing = false, l
                     disabled={loading}
                 />
                 {errors.full_name && <p className="text-red-600">{errors.full_name.message}</p>}
+            </div>
+
+            <div>
+                <label className="block font-semibold mb-1">Rol</label>
+                <select {...register("role", { required: "El rol es requerido" })} className="w-full p-2 border rounded"
+                    disabled={loading}>
+                    <option value="">Selecciona un rol</option>
+                    {roleOptions.map(([value, label]) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+                {errors.role && <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>}
             </div>
 
             {!isEditing && (

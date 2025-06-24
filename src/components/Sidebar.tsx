@@ -100,8 +100,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ sessions, fetchSessions }) => 
                 {sessions.map((session) => (
                     <div
                         key={session.external_id}
-                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm text-gray-900 dark:text-gray-100 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition ${session.external_id === session_external_id
-                            ? "bg-blue-100 dark:bg-blue-700 pointer-events-none"
+                        className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm text-gray-900 dark:text-gray-100 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 transition ${session.external_id === session_external_id
+                            ? "bg-blue-100 dark:bg-gray-700"
                             : ""
                             }`}
                     >
