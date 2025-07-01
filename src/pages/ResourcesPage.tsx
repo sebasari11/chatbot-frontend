@@ -106,7 +106,9 @@ export default function ResourcesPage() {
         if (editing) {
             await updateResource(editing.external_id, data);
         } else {
-            await createResource(data);
+            if (data.type !== "pdf") {
+                await createResource(data);
+            }
         }
         setShowModal(false);
         await fetchResources();
