@@ -9,3 +9,9 @@ export const processResource = (resource_id: string) => API.post<Resource>(`/res
 export const updateResource = (resource_id: string, data: Partial<Resource>) => API.put<Resource>(`/resources/${resource_id}/`, data);
 export const deleteResource = (resource_id: string) => API.delete(`/resources/${resource_id}/`);
 export const deleteChunksByResource = (resource_id: string) => API.delete(`/chunks/by_resource/${resource_id}/`);
+export const processLocal = (formData: FormData) =>
+  API.post("/resources/process_local/", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
