@@ -1,54 +1,106 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# UCALMA – Frontend (React + Vite)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este es el frontend de UCALMA, un sistema conversacional centrado en salud mental y ciberadicción. Desarrollado con **React**, **Vite** y **TailwindCSS**, ofrece una interfaz accesible, emocionalmente amigable y adaptable a múltiples dispositivos.
 
-## Expanding the ESLint configuration
+## 📋 Requisitos previos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js >= 18.x
+- npm >= 9.x o yarn >= 1.22
+- (Opcional) Docker para despliegue
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🔑 Variables de entorno
+
+Si necesitas conectarte a un backend o servicios externos, crea un archivo `.env` en la raíz del proyecto. Ejemplo:
+
+```env
+VITE_API_URL=https://tuservidor.api/endpoint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Consulta la documentación del backend para más detalles sobre las variables requeridas.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Tecnologías utilizadas
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+- React 18 + Vite
+- TypeScript
+- TailwindCSS
+- React Hook Form + Zod
+- Axios para consumo de APIs
+- Context API para manejo de sesión
+- Dark mode y diseño mobile-first
+
+## 🧩 Estructura de carpetas
+
+src/
+- components/ → Interfaz de chat, formularios, recursos
+- pages/ → Login, dashboard, historial, etc.
+- services/ → Conexión con backend (Axios)
+- form/ → Validación con React Hook Form + Zod
+- hooks/ → Estados globales, autenticación
+- context/ → Proveedor de usuario y sesión
+
+## 📦 Comandos útiles
+
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
+
+# Compilar para producción
+npm run build
+
+# Previsualizar build de producción
+npm run preview
+
+# Linting
+npm run lint
 ```
+
+## 🚀 Instrucciones para ejecución local
+
+### Clona el proyecto:
+
+```bash
+git clone https://github.com/sebasari11/chatbot-frontend.git
+cd chatbot-frontend
+```
+
+### Instala las dependencias:
+
+```bash
+npm install # o yarn
+```
+
+### Ejecuta el servidor de desarrollo:
+```bash             
+npm run dev
+```
+
+### Abre en el navegador:
+```bash
+http://localhost:5173
+```
+
+## 🚢 Despliegue
+
+Puedes desplegar este frontend en servicios como Vercel, Netlify o usando Docker. Ejemplo con Docker:
+
+```bash
+docker build -t ucalma-frontend .
+docker run -p 5173:5173 ucalma-frontend
+```
+
+Para producción, asegúrate de configurar correctamente las variables de entorno.
+
+## 📄 Licencia
+Desarrollado por Universidad de Cuenca – Facultad de Ingeniería.
+
+## 📬 Contacto
+
+Sebastián Arias – [LinkedIn](https://www.linkedin.com/in/sebasari11/) – sebasari11@gmail.com
+
+Repositorio: [https://github.com/sebasari11/chatbot-frontend](https://github.com/sebasari11/chatbot-frontend)
+
