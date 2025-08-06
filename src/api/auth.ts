@@ -31,6 +31,6 @@ export const loginUser = async (data: { email: string; password: string }) => {
     return response.data
 }
 
-export const fetchMe = () => API.get('/me')
+export const fetchMe = () => API.get('users/me')
 
 export default API
