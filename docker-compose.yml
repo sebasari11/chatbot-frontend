@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Development service
   chatbot-frontend-dev:
@@ -24,7 +22,7 @@ services:
       dockerfile: Dockerfile
       target: production
     ports:
-      - "80:80"
+      - "8081:80"
     environment:
       - NODE_ENV=production
     profiles:
