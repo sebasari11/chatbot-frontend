@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
       target: production
     ports:
-      - "8081:80"
+      - "8082:80"
     environment:
       - NODE_ENV=production
     profiles:

@@ -5,7 +5,7 @@ import AppRoutes from './router'
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/ucalma">
         <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
