@@ -1,9 +1,9 @@
 import axios from 'axios'
+
 const baseURL = import.meta.env.VITE_API_BASE_URL || new URL("/chatbot-api", window.location.origin).toString(); 
 
 const API = axios.create({
-    baseURL,
-    timeout: 15000,
+    baseURL
   });
 
 export const setAuthToken = (token: string | null) => {
