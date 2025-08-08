@@ -31,7 +31,7 @@ export async function getSessionMessages(chat_session_id: string): Promise<ChatM
 
 export async function getChatSessionsByCurrentUser(userId: string | undefined) {
     if (!userId) throw new Error("User ID is required");
-    const response = await API.get(`/users/me/chat_sessions/`);
+    const response = await API.get(`/users/me/chat_sessions`);
     return response.data;
 }
 
