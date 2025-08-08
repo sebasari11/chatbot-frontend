@@ -25,7 +25,7 @@ export const loginUser = async (data: { email: string; password: string }) => {
     const form = new URLSearchParams()
     form.append('username', data.email)
     form.append('password', data.password)
-    const response = await axios.post('http://localhost:8000/users/login', form, {
+    const response = await axios.post(`${baseURL}/users/login`, form, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
