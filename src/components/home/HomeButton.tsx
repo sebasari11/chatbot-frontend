@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import iconDefault from "@/assets/favicon.webp";
 
 interface HomeButtonProps {
     iconSrc?: string;
@@ -8,7 +9,7 @@ interface HomeButtonProps {
 }
 
 const HomeButton = ({
-    iconSrc = "/src/assets/favicon.webp",
+    iconSrc = iconDefault,
     alt = "Inicio",
     to = "/",
     size = 8,
