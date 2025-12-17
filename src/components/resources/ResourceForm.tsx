@@ -4,6 +4,7 @@ import type { Resource, ResourceType } from "@/types/resource";
 import { useEffect, useState } from "react";
 import { Save, Trash2 } from "lucide-react";
 import { processLocal } from "@/api/resource";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 
 import {
     AlertDialog,
@@ -13,12 +14,14 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogAction,
+    AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 
 interface Props {
     initialData?: Resource;
     onSubmit: (data: Partial<Resource>) => void;
     isEditing?: boolean;
+    onDeleteChunks?: (resourceId: string) => Promise<void>;
 }
 
 interface FormValues {
@@ -30,7 +33,7 @@ interface FormValues {
 
 const resourceTypes: ResourceType[] = ["pdf", "database", "url"];
 
-export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing = false }) => {
+export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing = false, onDeleteChunks }) => {
     const {
         register,
         handleSubmit,
@@ -57,10 +60,13 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
 
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [showDeleteChunksDialog, setShowDeleteChunksDialog] = useState(false);
 
     const handleFormSubmit: SubmitHandler<FormValues> = async (data) => {
         try {
             if (data.type === "pdf" && data.file?.[0]) {
+                setIsLoading(true);
                 const formData = new FormData();
                 formData.append("file", data.file[0]);
                 formData.append("name", data.name);
@@ -83,12 +89,32 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
         } catch (error) {
             console.error("Error al subir o procesar el recurso:", error);
             alert("Ocurrió un error al subir o procesar el archivo.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteChunks = async () => {
+        if (!initialData?.external_id || !onDeleteChunks) return;
+        
+        try {
+            setIsLoading(true);
+            await onDeleteChunks(initialData.external_id);
+            setSuccessMessage("✅ Los chunks fueron eliminados correctamente.");
+            setShowSuccessDialog(true);
+            setShowDeleteChunksDialog(false);
+        } catch (error) {
+            console.error("Error al eliminar chunks:", error);
+            alert("Ocurrió un error al eliminar los chunks.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
 
     return (
         <>
+            {isLoading && <LoadingOverlay />}
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
                 className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-md space-y-4"
@@ -103,7 +129,8 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                         <input
                             type="text"
                             {...register("name", { required: "El nombre es requerido" })}
-                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                     </div>
@@ -116,7 +143,8 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                         <input
                             type="text"
                             {...register("filepath", { required: "La URL es requerida" })}
-                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         {errors.filepath && <p className="text-red-500 text-sm mt-1">{errors.filepath.message}</p>}
                     </div>
@@ -128,7 +156,8 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                             type="file"
                             accept="application/pdf"
                             {...register("file", { required: "Debe seleccionar un archivo PDF" })}
-                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         {errors.file && <p className="text-red-500 text-sm mt-1">{errors.file.message}</p>}
                     </div>
@@ -139,7 +168,8 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                         <input
                             type="text"
                             {...register("filepath", { required: "La ruta es requerida" })}
-                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         {errors.filepath && <p className="text-red-500 text-sm mt-1">{errors.filepath.message}</p>}
                     </div>
@@ -151,7 +181,8 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                         <select
                             {...register("type", { required: true })}
-                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className="w-full mt-1 p-2 border rounded-md dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {resourceTypes.map((type) => (
                                 <option key={type} value={type}>
@@ -163,18 +194,23 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                 )}
 
                 <div className="flex items-center justify-between gap-4">
-                    {isEditing && <button
-                        type="button"
-                        className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                        title="Remover Chunks"
-                    >
-                        <Trash2 className="w-5 h-5" /> Chunks
-                        <span className="sr-only">Remover Chunks</span>
-                    </button>}
+                    {isEditing && onDeleteChunks && (
+                        <button
+                            type="button"
+                            onClick={() => setShowDeleteChunksDialog(true)}
+                            disabled={isLoading}
+                            className="flex-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Remover Chunks"
+                        >
+                            <Trash2 className="w-5 h-5" /> Chunks
+                            <span className="sr-only">Remover Chunks</span>
+                        </button>
+                    )}
 
                     <button
                         type="submit"
-                        className="flex-1 flex items-center justify-center bg-[#a0d7e7] hover:bg-[#88cde3] text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                        disabled={isLoading}
+                        className="flex-1 flex items-center justify-center bg-[#a0d7e7] hover:bg-[#88cde3] text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title={isEditing ? "Actualizar" : "Crear"}
                     >
                         {isEditing ? (
@@ -196,6 +232,26 @@ export const ResourceForm: React.FC<Props> = ({ initialData, onSubmit, isEditing
                     <AlertDialogFooter>
                         <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
                             Aceptar
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={showDeleteChunksDialog} onOpenChange={setShowDeleteChunksDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Eliminar chunks?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Esta acción eliminará todos los chunks asociados a este recurso. Esta acción no se puede deshacer.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleDeleteChunks}
+                            className="bg-red-500 hover:bg-red-600"
+                        >
+                            Eliminar
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

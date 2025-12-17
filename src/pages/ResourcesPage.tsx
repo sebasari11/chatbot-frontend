@@ -6,6 +6,7 @@ import {
     updateResource,
     deleteResource,
     processResource,
+    deleteChunksByResource,
 } from "@/api/resource";
 import type { Resource } from "@/types/resource";
 import ResourceTable from "@/components/resources/ResourceTable";
@@ -114,6 +115,11 @@ export default function ResourcesPage() {
         await fetchResources();
     };
 
+    const handleDeleteChunks = async (resourceId: string) => {
+        await deleteChunksByResource(resourceId);
+        await fetchResources();
+    };
+
     return (
         <Dialog open={showModal} onOpenChange={setShowModal}>
             <div className="flex flex-col h-screen">
@@ -151,6 +157,7 @@ export default function ResourcesPage() {
                         initialData={editing ?? undefined}
                         isEditing={!!editing}
                         onSubmit={handleFormSubmit}
+                        onDeleteChunks={handleDeleteChunks}
                     />
                     <DialogClose asChild>
                         <button className="mt-4 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:text-white rounded-md py-2">
