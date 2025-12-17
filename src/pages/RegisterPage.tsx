@@ -45,8 +45,6 @@ export default function RegisterPage() {
                 {serverError && <p className="text-red-500 text-sm">{serverError}</p>}
                 <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-white">Registro</h2>
 
-                <Input {...register('username')} label="Usuario" error={errors.username?.message} />
-
                 <Input {...register('full_name')} label="Nombre completo" error={errors.full_name?.message} />
 
                 <Input {...register('email')} label="Correo" error={errors.email?.message} />

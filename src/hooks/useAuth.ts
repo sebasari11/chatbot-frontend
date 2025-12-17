@@ -27,13 +27,17 @@ export const useAuth = () => {
     }
 
     const register = async (data: {
-        username: string
         email: string
         password: string
         full_name: string
     }) => {
         try {
-            await registerUser(data)
+            await registerUser({
+                username: data.email,
+                email: data.email,
+                password: data.password,
+                full_name: data.full_name
+            })
             await login(data.email, data.password)
         } catch (err: unknown) {
             const error = err as AxiosError<{ detail: string }>
