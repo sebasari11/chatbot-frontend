@@ -8,7 +8,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { FolderKanban, LogOut, Settings, User, UserIcon, Users } from 'lucide-react';
+import { FolderKanban, LogOut, Settings, User, UserIcon, Users, Database } from 'lucide-react';
 import { useAuthContext } from '@/context/AuthContext';
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import { useNavigate } from 'react-router-dom';
@@ -33,22 +33,28 @@ export default function UserMenu() {
                     <span>Ver perfil</span>
                 </DropdownMenuItem>
                 {user?.role === 'admin' && (
-                    <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                            <Settings className="w-4 h-4 mr-2" />
-                            <span>Configuración</span>
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                            <DropdownMenuItem onClick={() => navigate('/users')}>
-                                <Users className="mr-2 h-4 w-4" />
-                                Gestionar Usuarios
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => navigate('/resources')}>
-                                <FolderKanban className="mr-2 h-4 w-4" />
-                                Gestionar Recursos
-                            </DropdownMenuItem>
-                        </DropdownMenuSubContent>
-                    </DropdownMenuSub>
+                    <>
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                                <Settings className="w-4 h-4 mr-2" />
+                                <span>Configuración</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                                <DropdownMenuItem onClick={() => navigate('/users')}>
+                                    <Users className="mr-2 h-4 w-4" />
+                                    Gestionar Usuarios
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => navigate('/resources')}>
+                                    <FolderKanban className="mr-2 h-4 w-4" />
+                                    Gestionar Recursos
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => navigate('/faiss')}>
+                                    <Database className="w-4 h-4 mr-2" />
+                                    <span>Gestionar Índice FAISS</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                    </>
                 )}
                 <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4 text-red-500" />

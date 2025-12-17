@@ -8,6 +8,7 @@ import { ChatPage } from './pages/ChatPage2'
 import ResourcesPage from './pages/ResourcesPage'
 import HomeRedirect from './components/home/HomeRedirect'
 import UsersPage from './pages/UsersPage'
+import FaissPage from './pages/FaissPage'
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const { user, loading } = useAuthContext()
@@ -26,6 +27,7 @@ export default function AppRoutes() {
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
             <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
             <Route path="/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
+            <Route path="/faiss" element={<ProtectedRoute><FaissPage /></ProtectedRoute>} />
             <Route path="/chat/:session_external_id" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
         </Routes>
     )
