@@ -14,7 +14,7 @@ export const TypingText: React.FC<TypingTextProps> = ({ text, speed = 30, onTypi
         loop: 1,
         typeSpeed: speed,
         deleteSpeed: 0,
-        delaySpeed: 1000,
+        delaySpeed: 0, // Sin delay inicial para empezar inmediatamente
         onType: onTyping,
     });
 
